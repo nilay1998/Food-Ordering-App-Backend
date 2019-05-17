@@ -20,13 +20,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 1024
+  },
+  phone: {
+    type: Number,
+    required: true
   }
-  // phone: {
-  //   type: Number,
-  //   required: true,
-  //   minlength:10,
-  //   maxlength:10,
-  // }
 });
 
 
@@ -36,8 +34,8 @@ function validateUser(user) {
   const schema = {
     name: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(255).required()
-    //phone: Joi.number().min(10).max(10).required()
+    password: Joi.string().min(5).max(255).required(),
+    phone: Joi.number().required()
   };
 
   return Joi.validate(user, schema);

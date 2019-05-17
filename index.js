@@ -23,7 +23,7 @@ app.post('/api/register', async (req,res) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
-    res.send(user);
+    res.send('Registeration Success');
 });
 
 app.post('/api/login', async (req,res) =>{

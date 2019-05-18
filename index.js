@@ -12,31 +12,35 @@ mongoose.connect('mongodb://localhost/Logging')
 
 app.use(express.json());
 
+app.get('/api/get',async(req,res)=>{
+    res.json('RUNNING');
+});
+
 app.post('/api/register', async (req,res) => {
     const { error } = validate(req.body); 
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).json(error.details[0].message);
 
     let user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send('User already registered.');
+    if (user) return res.status(400).json('User already registered.');
 
     user = new User(_.pick(req.body, ['name', 'email', 'password','phone']));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
-    res.send('Registeration Success');
+    res.json('Registeration Success');
 });
 
 app.post('/api/login', async (req,res) =>{
     const {error} = val(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).json(error.details[0].message);
 
     let user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send('Invalid email or password.');
+    if (!user) return res.status(400).json('Invalid email or password.');
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send('Invalid email or password.');
 
-    res.send('Login Success');
+    res.json('Login Success');
 });
 
 function val(req) {

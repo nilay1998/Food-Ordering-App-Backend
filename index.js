@@ -20,30 +20,30 @@ app.get('/api/get',async(req,res)=>{
 
 app.post('/api/register', async (req,res) => {
     const { error } = validate(req.body); 
-    if (error) return res.json(error.details[0].message);
+    if (error) return res.json({status:'0', message: error.details[0].message});
 
     let user = await User.findOne({ email: req.body.email });
-    if (user) return res.json('User already registered.');
+    if (user) return res.json({status:'0',message:'User already registered.'});
 
     user = new User(_.pick(req.body, ['name', 'email', 'password','phone']));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
 
-    res.json('Registeration Success');
+    res.json({status:'1',message:'Registeration Success'});
 });
 
 app.post('/api/login', async (req,res) =>{
     const {error} = val(req.body);
-    if (error) return res.json(error.details[0].message);
+    if (error) return res.json({status:'0', message: error.details[0].message});
 
     let user = await User.findOne({ email: req.body.email });
-    if (!user) return res.json('Invalid email or password.');
+    if (!user) return res.json({status:'0',message:'Invalid email or password.'});
 
     const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.json('Invalid email or password.')
+    if (!validPassword) return res.json({status:0,message:'Invalid email or password.'})
 
-    res.json('Login Success');
+    res.json({status:'1', message:'Login Success', name:user.name,email:user.email, phone:user.phone });
 });
 
 function val(req) {

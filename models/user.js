@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: Number,
     required: true
+  },
+  isAdmin: {
+    type:Boolean,
+    default: false
   }
 });
 
@@ -41,5 +45,15 @@ function validateUser(user) {
   return Joi.validate(user, schema);
 }
 
+function val(req) {
+  const schema = {
+    email: Joi.string().min(5).max(255).required().email(),
+    password: Joi.string().min(5).max(255).required()
+  };
+
+  return Joi.validate(req, schema);
+}
+
 exports.User = User; 
 exports.validate = validateUser;
+exports.val=val;

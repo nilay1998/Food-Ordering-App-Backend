@@ -3,6 +3,7 @@ const app = express();
 const bodyParser=require('body-parser');
 const login=require('./routes/login');
 const register=require('./routes/register');
+const menu=require('./routes/menu');
 const mongoose=require('mongoose');
 
 mongoose.connect('mongodb://localhost/Logging')
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use('/api/login',login);
 app.use('/api/register',register);
+app.use('/api/menu',menu);
 
 app.get('/api/get',async(req,res)=>{
     res.json('RUNNING');
